@@ -32,7 +32,7 @@ class GaleriController extends Controller
             'deskripsi' => 'nullable|string',
             'kategori_id' => 'required|exists:kategori,id',
             'fotos' => 'required|array|min:1',
-            'fotos.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'fotos.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240'
         ]);
 
         // Buat folder upload jika belum ada
@@ -117,7 +117,7 @@ class GaleriController extends Controller
             'kategori_id' => 'required|exists:kategori,id',
             'status' => 'required|in:aktif,nonaktif',
             'fotos' => 'nullable|array',
-            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240'
         ]);
 
         // Update galeri status

@@ -158,7 +158,12 @@
         }
         
         /* Gallery Grid */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .gallery-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 30px; 
+            margin-bottom: 40px; 
+        }
         
         /* Animation for filtered items */
         @keyframes fadeIn {
@@ -166,22 +171,131 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .gallery-item { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e5e7eb; transition: all 0.3s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
         
-        .gallery-item:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
+        .error-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+        
+        /* Image Carousel Styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .carousel-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0 0 16px 16px;
+            display: block;
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .carousel-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .carousel-prev {
+            left: 20px;
+        }
+        
+        .carousel-next {
+            right: 20px;
+        }
+        
+        .carousel-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* List View Specific Styles */
+        .gallery-grid[style*="1fr"] .gallery-item {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            max-height: 280px;
+        }
+        
+        .gallery-grid[style*="1fr"] .gallery-image {
+            height: 100%;
+            max-height: 280px;
+        }
+        
+        .gallery-grid[style*="1fr"] .gallery-info {
+            padding: 24px 30px;
+        }
+        
+        .gallery-item { 
+            background: #fff; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            border: 1px solid #e5e7eb; 
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .gallery-item:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15); 
+        }
         
         .gallery-image {
             width: 100%;
             height: 280px;
             object-fit: cover;
+            object-position: center;
             cursor: pointer;
+            display: block;
+            background: #f3f4f6;
         }
         
         .gallery-info {
-            padding: 2rem;
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
-        .gallery-title { font-size: 1.35rem; font-weight: 700; color: #1e293b; margin-bottom: 12px; line-height: 1.3; }
+        .gallery-title { 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: #1e293b; 
+            margin-bottom: 12px; 
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.8em;
+        }
         
         .gallery-category {
             display: inline-block;
@@ -194,11 +308,23 @@
             margin-bottom: 14px;
         }
         
-        .gallery-description { color: #64748b; font-size: 1rem; line-height: 1.7; margin-bottom: 18px; }
+        .gallery-description { 
+            color: #64748b; 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
         
         .gallery-actions {
             display: flex;
             gap: 10px;
+            margin-top: auto;
         }
         
         .action-btn {
@@ -241,11 +367,23 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
         }
         
-        .modal-content { background: #fff; margin: 5% auto; padding: 0; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: modalSlideIn 0.3s ease; }
+        .modal-content { 
+            background: #fff; 
+            margin: 5% auto; 
+            padding: 0; 
+            border-radius: 16px; 
+            width: 90%; 
+            max-width: 600px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            animation: modalSlideIn 0.3s ease;
+            position: relative;
+        }
         
         @keyframes modalSlideIn {
             from {
@@ -258,15 +396,45 @@
             }
         }
         
-        .modal-header { background: #f8f9fa; padding: 20px 30px; border-radius: 16px 16px 0 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; }
+        .modal-header { 
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            padding: 24px 30px; 
+            border-radius: 16px 16px 0 0; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
         
-        .modal-title { color: #1e293b; font-size: 24px; font-weight: 700; }
+        .modal-title { 
+            color: #ffffff; 
+            font-size: 22px; 
+            font-weight: 700;
+            margin: 0;
+        }
         
-        .close { color: #64748b; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s ease; }
-        .close:hover { color: #111827; }
+        .close { 
+            color: #ffffff; 
+            font-size: 32px; 
+            font-weight: 300;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            line-height: 1;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .close:hover { 
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
         
         .modal-body {
             padding: 30px;
+            max-height: calc(80vh - 200px);
+            overflow-y: auto;
         }
         
         .form-group {
@@ -275,9 +443,24 @@
         
         .form-label { display: block; color: #374151; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
         
-        .form-input { width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; color: #111827; font-size: 16px; transition: all 0.3s ease; }
+        .form-input { 
+            width: 100%; 
+            padding: 14px 18px; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 10px; 
+            background: #fff; 
+            color: #111827; 
+            font-size: 18px; 
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
         
-        .form-input:focus { outline: none; border-color: #3b82f6; background: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+        .form-input:focus { 
+            outline: none; 
+            border-color: #3b82f6; 
+            background: #fff; 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
         
         .form-input::placeholder {
             color: #94a3b8;
@@ -307,16 +490,31 @@
         
         .file-input-label:hover { border-color: #3b82f6; background: #f8fafc; }
         
-        .modal-footer { padding: 20px 30px; background: #f8f9fa; border-radius: 0 0 16px 16px; display: flex; justify-content: flex-end; gap: 15px; border-top: 1px solid #e5e7eb; }
+        .modal-footer { 
+            padding: 20px 30px; 
+            background: #f8f9fa; 
+            border-radius: 0 0 16px 16px; 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 12px; 
+            border-top: 1px solid #e5e7eb;
+            flex-wrap: wrap;
+        }
         
         .btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
         .btn-secondary {
@@ -338,12 +536,63 @@
         }
         
         .btn-success {
-            background: #10b981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
         
         .btn-success:hover {
-            background: #059669;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+        
+        .btn-download {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+        
+        .btn-download:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .captcha-box {
+            background: linear-gradient(135deg, #3b82f615 0%, #2563eb15 100%);
+            padding: 24px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            margin: 20px 0;
+        }
+        
+        .captcha-question {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        
+        .rate-limit-info {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #fbbf24;
+            color: #92400e;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
         }
         
         /* Responsive */
@@ -367,8 +616,12 @@
             }
             
             .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            
+            .gallery-image {
+                height: 220px;
             }
             
             .gallery-item {
@@ -390,6 +643,51 @@
             .modal-content {
                 width: 95%;
                 margin: 10% auto;
+            }
+            
+            .modal-header {
+                padding: 20px;
+            }
+            
+            .modal-title {
+                font-size: 18px;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+            
+            .modal-footer {
+                padding: 16px 20px;
+                gap: 10px;
+            }
+            
+            .btn {
+                flex: 1;
+                min-width: 100px;
+            }
+            
+            .captcha-question {
+                font-size: 24px;
+            }
+            
+            .carousel-nav {
+                padding: 10px 12px;
+                font-size: 16px;
+            }
+            
+            .carousel-prev {
+                left: 10px;
+            }
+            
+            .carousel-next {
+                right: 10px;
+            }
+            
+            .carousel-counter {
+                font-size: 12px;
+                padding: 6px 12px;
+                bottom: 10px;
             }
         }
     </style>
@@ -455,15 +753,15 @@
             <!-- Gallery Grid -->
             <div class="gallery-grid" id="galleryGrid">
                 @foreach($galeri as $item)
-                <div class="gallery-item" data-category="{{ $item->post->kategori->judul ?? 'Umum' }}">
+                <div class="gallery-item" data-category="{{ $item->post->kategori->judul ?? 'Umum' }}" data-gallery-id="{{ $item->id }}">
                     @if($item->fotos->count() > 0)
                         <img src="{{ asset('uploads/galeri/' . $item->fotos->first()->file) }}" 
                              alt="{{ $item->post->judul ?? 'Gallery Image' }}" 
                              class="gallery-image"
-                             onclick="openImageModal('{{ asset('uploads/galeri/' . $item->fotos->first()->file) }}', '{{ $item->post->judul ?? 'Gallery Image' }}')">
+                             onclick="openGalleryModal({{ $item->id }})">
                     @else
-                        <div class="gallery-image" style="background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
-                            <i class="fas fa-image" style="font-size: 48px;"></i>
+                        <div class="gallery-image" style="display: flex; align-items: center; justify-content: center; color: #cbd5e1;">
+                            <i class="fas fa-image" style="font-size: 64px;"></i>
                         </div>
                     @endif
                     <div class="gallery-info">
@@ -473,6 +771,18 @@
                         @if($item->fotos->count() > 1)
                             <p class="gallery-description"><i class="fas fa-images"></i> {{ $item->fotos->count() }} foto</p>
                         @endif
+                        @if($item->fotos->count() > 0)
+                            <button class="btn-download" onclick="event.stopPropagation(); openDownloadModal('{{ $item->fotos->first()->file }}', '{{ $item->post->judul ?? 'Gallery Image' }}')">
+                                <i class="fas fa-download"></i> Download Foto
+                            </button>
+                        @endif
+                    </div>
+                    
+                    <!-- Hidden data for all photos -->
+                    <div class="gallery-photos-data" style="display: none;">
+                        @foreach($item->fotos as $foto)
+                            <span data-photo="{{ asset('uploads/galeri/' . $foto->file) }}"></span>
+                        @endforeach
                     </div>
                 </div>
                 @endforeach
@@ -483,22 +793,191 @@
 
     <!-- Image Preview Modal -->
     <div id="imageModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
                 <h2 class="modal-title" id="imageModalTitle">Preview Foto</h2>
                 <span class="close" onclick="closeModal('imageModal')">&times;</span>
             </div>
-            <div class="modal-body" style="text-align: center;">
-                <img id="imageModalImg" src="" alt="Preview" style="max-width: 100%; border-radius: 8px;">
+            <div class="modal-body" style="text-align: center; padding: 0; position: relative;">
+                <div class="carousel-container">
+                    <img id="imageModalImg" src="" alt="Preview" class="carousel-image">
+                    <button class="carousel-nav carousel-prev" onclick="changeImage(-1)" id="prevBtn" style="display: none;">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-nav carousel-next" onclick="changeImage(1)" id="nextBtn" style="display: none;">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="carousel-counter" id="imageCounter" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Modal with Captcha -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Download Foto</h2>
+                <span class="close" onclick="closeModal('downloadModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="rate-limit-info">
+                    <i class="fas fa-info-circle"></i> Batas download: 5 file per jam
+                </div>
+                <p style="margin-bottom: 15px; color: #64748b;">
+                    Untuk mengunduh foto, silakan jawab pertanyaan berikut:
+                </p>
+                <div class="captcha-box">
+                    <div class="captcha-question" id="captchaQuestion">Loading...</div>
+                    <input type="number" id="captchaAnswer" class="form-input" placeholder="Masukkan jawaban" style="text-align: center; font-size: 18px;">
+                </div>
+                <div id="captchaError" style="color: #ef4444; margin-top: 10px; display: none; padding: 12px; background: #fee2e2; border-radius: 8px; border-left: 4px solid #ef4444; font-weight: 500;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('downloadModal')">Batal</button>
+                <button class="btn btn-success" onclick="verifyAndDownload()">
+                    <i class="fas fa-download"></i> Download
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        function openImageModal(imageSrc, title) {
-            document.getElementById('imageModalImg').src = imageSrc;
+        let currentCaptchaSession = null;
+        let currentFilePath = null;
+        let currentImages = [];
+        let currentImageIndex = 0;
+
+        function openGalleryModal(galleryId) {
+            // Find gallery item
+            const galleryItem = document.querySelector(`[data-gallery-id="${galleryId}"]`);
+            if (!galleryItem) return;
+            
+            // Get title
+            const title = galleryItem.querySelector('.gallery-title').textContent;
+            
+            // Get all photos
+            const photoElements = galleryItem.querySelectorAll('.gallery-photos-data span[data-photo]');
+            currentImages = Array.from(photoElements).map(el => el.getAttribute('data-photo'));
+            currentImageIndex = 0;
+            
+            // Show modal
             document.getElementById('imageModalTitle').textContent = title;
             document.getElementById('imageModal').style.display = 'block';
+            
+            // Display first image
+            updateCarousel();
+        }
+        
+        function updateCarousel() {
+            if (currentImages.length === 0) return;
+            
+            // Update image
+            document.getElementById('imageModalImg').src = currentImages[currentImageIndex];
+            
+            // Show/hide navigation buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('imageCounter');
+            
+            if (currentImages.length > 1) {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+                counter.style.display = 'block';
+                counter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                counter.style.display = 'none';
+            }
+        }
+        
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            
+            // Loop around
+            if (currentImageIndex < 0) {
+                currentImageIndex = currentImages.length - 1;
+            } else if (currentImageIndex >= currentImages.length) {
+                currentImageIndex = 0;
+            }
+            
+            updateCarousel();
+        }
+        
+        async function openDownloadModal(filePath, fileName) {
+            currentFilePath = filePath;
+            document.getElementById('downloadModal').style.display = 'block';
+            document.getElementById('captchaAnswer').value = '';
+            document.getElementById('captchaError').style.display = 'none';
+            
+            // Generate captcha
+            try {
+                const response = await fetch('{{ route('download.captcha') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('captchaQuestion').textContent = data.question;
+                currentCaptchaSession = data.session_id;
+            } catch (error) {
+                console.error('Error generating captcha:', error);
+                document.getElementById('captchaQuestion').textContent = 'Error loading captcha';
+            }
+        }
+        
+        async function verifyAndDownload() {
+            const answer = document.getElementById('captchaAnswer').value;
+            const errorDiv = document.getElementById('captchaError');
+            const captchaBox = document.querySelector('.captcha-box');
+            
+            if (!answer) {
+                errorDiv.textContent = 'Silakan jawab pertanyaan captcha';
+                errorDiv.style.display = 'block';
+                captchaBox.classList.add('error-shake');
+                setTimeout(() => captchaBox.classList.remove('error-shake'), 400);
+                return;
+            }
+            
+            try {
+                const response = await fetch('{{ route('download.verify') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        captcha_answer: answer,
+                        captcha_session: currentCaptchaSession,
+                        file_path: currentFilePath
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Redirect to download
+                    window.location.href = `/download/${data.download_token}`;
+                    closeModal('downloadModal');
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                    captchaBox.classList.add('error-shake');
+                    setTimeout(() => captchaBox.classList.remove('error-shake'), 400);
+                    // Refresh captcha
+                    openDownloadModal(currentFilePath, '');
+                }
+            } catch (error) {
+                console.error('Error verifying captcha:', error);
+                errorDiv.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+                errorDiv.style.display = 'block';
+                captchaBox.classList.add('error-shake');
+                setTimeout(() => captchaBox.classList.remove('error-shake'), 400);
+            }
         }
         
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
@@ -509,6 +988,33 @@
                 event.target.style.display = 'none';
             }
         }
+        
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Arrow keys for image navigation
+            if (document.getElementById('imageModal').style.display === 'block') {
+                if (event.key === 'ArrowLeft') {
+                    changeImage(-1);
+                } else if (event.key === 'ArrowRight') {
+                    changeImage(1);
+                }
+            }
+        });
+        
+        // Allow Enter key to submit download
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && document.getElementById('downloadModal').style.display === 'block') {
+                verifyAndDownload();
+            }
+        });
         
         // Search and Filter
         document.getElementById('searchInput').addEventListener('input', function() {
@@ -557,7 +1063,7 @@
                 if (view === 'list') {
                     grid.style.gridTemplateColumns = '1fr';
                 } else {
-                    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+                    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(320px, 1fr))';
                 }
             });
         });

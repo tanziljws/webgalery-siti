@@ -29,7 +29,11 @@ Sistem manajemen galeri foto untuk sekolah yang dibangun dengan Laravel 12.0. Ap
 - Profile management
 - Authentication system
 
-### Manajemen Halaman
+### Download Galeri
+- Download foto tanpa login
+- Captcha verification (pertanyaan matematika sederhana)
+- Rate limiting: 5 downloads per IP per jam
+- Download token berlaku 5 menit
 - CMS untuk halaman website
 - Slug generation otomatis
 - Status publishing
@@ -133,8 +137,8 @@ chmod -R 755 public/uploads/galeri
 
 ### File Upload Settings
 Konfigurasi di `config/filesystems.php`:
-- Max file size: 2MB per foto
-- Allowed types: jpeg, png, jpg, gif
+- Max file size: 10MB per foto
+- Allowed types: jpeg, png, jpg, gif, webp
 - Storage: local (public/uploads/galeri)
 
 ### Authentication

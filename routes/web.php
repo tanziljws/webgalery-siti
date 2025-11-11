@@ -8,6 +8,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DownloadController;
 
 // -------------------------------
 // PUBLIC ROUTES (Tanpa Login)
@@ -32,6 +33,11 @@ Route::get('/user/informasi', function () {
 
 // Public route untuk menampilkan pages
 Route::get('/page/{slug}', [PageController::class, 'showBySlug'])->name('page.show');
+
+// Download routes with captcha
+Route::post('/download/generate-captcha', [DownloadController::class, 'generateCaptcha'])->name('download.captcha');
+Route::post('/download/verify', [DownloadController::class, 'verifyCaptcha'])->name('download.verify');
+Route::get('/download/{token}', [DownloadController::class, 'download'])->name('download.file');
 
 // -------------------------------
 // AUTH ROUTES (Login/Logout)

@@ -88,7 +88,7 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 @error('fotos') border-red-500 @enderror @error('fotos.*') border-red-500 @enderror"
                         onchange="previewImages(event)"
                     >
-                    <p class="mt-1 text-sm text-gray-500">Pilih beberapa foto sekaligus. Format: JPG, PNG, GIF. Maksimal 2MB per file.</p>
+                    <p class="mt-1 text-sm text-gray-500">Pilih beberapa foto sekaligus. Format: JPG, PNG, GIF, WEBP. Maksimal 10MB per file.</p>
                     @error('fotos')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
