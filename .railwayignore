@@ -1,0 +1,36 @@
+# Development files
+node_modules/
+.git/
+.vscode/
+.idea/
+
+# Test files
+tests/
+phpunit.xml
+
+# Documentation
+*.md
+!README.md
+
+# Development dependencies
+laravel-sail/
+laravel-pail/
+
+# Cache and logs (will be regenerated)
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+
+# Environment files
+.env.local
+.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# SQLite database (using MySQL)
+*.sqlite
+database/database.sqlite
