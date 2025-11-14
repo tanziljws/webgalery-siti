@@ -97,6 +97,12 @@
                         <span>Laporan Statistik</span>
                     </a>
 
+                    <a href="{{ route('admin.informasi-items.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.informasi-items.*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-700 hover:text-white' }}">
+                        <i class="fas fa-bullhorn w-5"></i>
+                        <span>Informasi Terbaru</span>
+                    </a>
+
                     <a href="{{ route('site-settings.index') }}" 
                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 {{ request()->routeIs('site-settings.*') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-700 hover:text-white' }}">
                         <i class="fas fa-cog w-5"></i>

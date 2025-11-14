@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\GalleryReportController;
 use App\Http\Controllers\FotoController;
+use App\Http\Controllers\Admin\InformasiAdminController;
 use App\Models\User;
 
 // -------------------------------
@@ -49,8 +50,9 @@ Route::get('/user/agenda', function () {
 
 Route::get('/user/informasi', function () {
     $informasiItems = \App\Models\Informasi::where('status', 'aktif')
-        ->orderBy('order')
-        ->limit(5)
+        ->orderByDesc('date') // paling baru dulu
+        ->orderBy('order')    // kalau tanggal sama, pakai urutan
+        ->limit(6)            // hanya tampilkan 6 informasi terbaru
         ->get();
     return view('user.informasi', compact('informasiItems'));
 })->name('user.informasi');
@@ -109,6 +111,9 @@ Route::middleware(['auth:petugas'])->group(function () {
     // Informasi - Edit only (school identity)
     Route::get('informasi', [\App\Http\Controllers\InformasiController::class, 'index'])->name('informasi.index');
     Route::put('informasi', [\App\Http\Controllers\InformasiController::class, 'update'])->name('informasi.update');
+    
+    // Informasi Terbaru - CRUD untuk tabel informasi (data yang tampil di halaman user)
+    Route::resource('admin/informasi-items', InformasiAdminController::class)->names('admin.informasi-items');
     
     Route::resource('agenda', \App\Http\Controllers\AgendaController::class);
     // ✅ Toggle status routes
