@@ -1,0 +1,58 @@
+# Dependencies
+node_modules
+vendor
+
+# Build files
+public/build
+public/hot
+public/storage
+
+# Storage
+storage/app/*
+!storage/app/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/testing/*
+!storage/framework/testing/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+storage/logs/*
+!storage/logs/.gitignore
+
+# Cache
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea
+.vscode
+.fleet
+.zed
+.phpactor.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.phpunit.cache
+.phpunit.result.cache
+
+# Uploads - exclude dari Docker build (akan di-copy manual atau via storage)
+public/uploads/*
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
