@@ -49,7 +49,7 @@ Route::get('/test-homepage-full', function () {
             $results['gallery_ids'] = $latestGaleriIds->toArray();
             
             if ($latestGaleriIds->isNotEmpty()) {
-                $latestGalleries = \App\Models\galery::with(['post.kategori', 'fotos'])
+    $latestGalleries = \App\Models\galery::with(['post.kategori', 'fotos'])
                     ->whereIn('id', $latestGaleriIds)
                     ->get()
                     ->filter(function($gallery) {
@@ -124,7 +124,7 @@ Route::get('/test-homepage-full', function () {
                     ->where('galery.status', 'aktif')
                     ->orderBy('posts.created_at', 'desc')
                     ->select('galery.id')
-                    ->limit(5)
+        ->limit(5)
                     ->pluck('id');
                 
                 if ($latestGaleriIds->isNotEmpty()) {
@@ -145,7 +145,7 @@ Route::get('/test-homepage-full', function () {
                 $latestAgendas = \App\Models\Agenda::where('status', 'aktif')
                     ->orderBy('order')
                     ->limit(4)
-                    ->get();
+        ->get();
             }
             
             $view = view('user.dashboard', compact('latestGalleries', 'latestAgendas'));
@@ -218,10 +218,10 @@ Route::get('/test-homepage', function () {
         
         // Test 3: Query agendas
         try {
-            $latestAgendas = \App\Models\Agenda::where('status', 'aktif')
-                ->orderBy('order')
-                ->limit(4)
-                ->get();
+    $latestAgendas = \App\Models\Agenda::where('status', 'aktif')
+        ->orderBy('order')
+        ->limit(4)
+        ->get();
             $results['agendas'] = [
                 'count' => $latestAgendas->count(),
                 'data' => $latestAgendas->toArray(),
@@ -660,7 +660,7 @@ Route::get('/', function () {
         $latestAgendas = collect([]);
         
         try {
-            return view('user.dashboard', compact('latestGalleries', 'latestAgendas'));
+    return view('user.dashboard', compact('latestGalleries', 'latestAgendas'));
         } catch (\Exception $viewError) {
             // Jika view juga error, return simple HTML
             return response('
@@ -684,7 +684,16 @@ Route::get('/user/gallery', function () {
         
         // Query galleries dengan error handling
         try {
-            if (Schema::hasTable('galery') && Schema::hasTable('posts')) {
+            $hasGalery = false;
+            $hasPosts = false;
+            try {
+                $hasGalery = Schema::hasTable('galery');
+                $hasPosts = Schema::hasTable('posts');
+            } catch (\Exception $schemaError) {
+                \Log::warning('Schema check error in gallery: ' . $schemaError->getMessage());
+            }
+            
+            if ($hasGalery && $hasPosts) {
                 $galeri = \App\Models\galery::with(['post.kategori', 'fotos'])
                     ->where('status', 'aktif')
                     ->get()
@@ -700,8 +709,15 @@ Route::get('/user/gallery', function () {
         
         // Query kategori dengan error handling
         try {
-            if (Schema::hasTable('kategori')) {
-                $kategoris = \App\Models\Kategori::orderBy('judul', 'asc')->get();
+            $hasKategori = false;
+            try {
+                $hasKategori = Schema::hasTable('kategori');
+            } catch (\Exception $schemaError) {
+                \Log::warning('Schema check error for kategori: ' . $schemaError->getMessage());
+            }
+            
+            if ($hasKategori) {
+    $kategoris = \App\Models\Kategori::orderBy('judul', 'asc')->get();
             }
         } catch (\Exception $e) {
             \Log::error('Error loading kategori: ' . $e->getMessage());
@@ -715,9 +731,10 @@ Route::get('/user/gallery', function () {
             'file' => $e->getFile(),
             'line' => $e->getLine(),
         ]);
-        return response()->view('errors.database', [
-            'message' => config('app.debug') ? $e->getMessage() : 'Error loading gallery page.'
-        ], 500);
+        // Jangan tampilkan error view, langsung render dengan empty data
+        $galeri = collect([]);
+        $kategoris = collect([]);
+    return view('user.gallery', compact('galeri', 'kategoris'));
     }
 })->name('user.gallery');
 
@@ -743,7 +760,7 @@ Route::get('/user/agenda', function () {
             $agendaItems = collect([]);
         }
         
-        return view('user.agenda', compact('agendaItems'));
+    return view('user.agenda', compact('agendaItems'));
     } catch (\Throwable $e) {
         \Log::error('Error loading agenda page: ' . $e->getMessage(), [
             'trace' => $e->getTraceAsString(),
@@ -763,11 +780,11 @@ Route::get('/user/informasi', function () {
         // Query informasi dengan error handling
         try {
             if (Schema::hasTable('informasi')) {
-                $informasiItems = \App\Models\Informasi::where('status', 'aktif')
-                    ->orderByDesc('date') // paling baru dulu
-                    ->orderBy('order')    // kalau tanggal sama, pakai urutan
-                    ->limit(6)            // hanya tampilkan 6 informasi terbaru
-                    ->get();
+    $informasiItems = \App\Models\Informasi::where('status', 'aktif')
+        ->orderByDesc('date') // paling baru dulu
+        ->orderBy('order')    // kalau tanggal sama, pakai urutan
+        ->limit(6)            // hanya tampilkan 6 informasi terbaru
+        ->get();
             } else {
                 \Log::info('Table informasi does not exist, using empty collection');
             }
@@ -780,7 +797,7 @@ Route::get('/user/informasi', function () {
             $informasiItems = collect([]);
         }
         
-        return view('user.informasi', compact('informasiItems'));
+    return view('user.informasi', compact('informasiItems'));
     } catch (\Throwable $e) {
         \Log::error('Error loading informasi page: ' . $e->getMessage(), [
             'trace' => $e->getTraceAsString(),

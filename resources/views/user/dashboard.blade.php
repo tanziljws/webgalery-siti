@@ -368,8 +368,8 @@
             background-position: center;
             background-repeat: no-repeat;
             z-index: -1;
-            /* Using your specific image */
-            background-image: url('../../images/DJI_0148.jpg');
+            /* Default image fallback */
+            background-image: url('{{ asset('images/DJI_0148.jpg') }}');
         }
         
         /* Added overlay for better text readability */
@@ -1091,7 +1091,15 @@
         <div class="container">
             <!-- Hero Section -->
             <section class="hero-section">
-                <div class="hero-background"></div>
+                @php
+                    $heroImage = \App\Models\SiteSetting::get('home_hero_image', '');
+                @endphp
+                @if($heroImage)
+                    <div class="hero-background" style="background-image: url('{{ asset('storage/' . $heroImage) }}');"></div>
+                @else
+                    {{-- Fallback ke image default yang sudah ada di CSS --}}
+                    <div class="hero-background"></div>
+                @endif
                 <div class="hero-overlay"></div>
                 <h1 class="hero-title">{{ \App\Models\SiteSetting::get('home_hero_title', 'Selamat Datang di SMKN 4 BOGOR') }}</h1>
                 <p class="hero-subtitle">{{ \App\Models\SiteSetting::get('home_hero_subtitle', 'Mengembangkan potensi siswa melalui pendidikan berkualitas dan fasilitas modern') }}</p>
