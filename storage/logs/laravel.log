@@ -594,3 +594,5 @@
 #36 /Users/tanziljws/Downloads/ujikom/artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #37 {main}
 "} 
+[2025-11-15 10:51:56] local.INFO: Gallery query result: 15 items  
+[2025-11-15 10:51:56] local.INFO: Gallery page - Galeri count: 15, Kategori count: 4  
