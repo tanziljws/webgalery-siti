@@ -368,8 +368,8 @@
             background-position: center;
             background-repeat: no-repeat;
             z-index: -1;
-            /* Default image fallback */
-            background-image: url('{{ asset('images/DJI_0148.jpg') }}');
+            /* Default gradient fallback jika inline style tidak override */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
         /* Added overlay for better text readability */
@@ -1097,8 +1097,8 @@
                 @if($heroImage)
                     <div class="hero-background" style="background-image: url('{{ asset('storage/' . $heroImage) }}');"></div>
                 @else
-                    {{-- Fallback ke image default yang sudah ada di CSS --}}
-                    <div class="hero-background"></div>
+                    {{-- Fallback: coba load image, jika gagal akan fallback ke gradient di CSS --}}
+                    <div class="hero-background" data-hero-image="{{ asset('images/DJI_0148.JPG') }}"></div>
                 @endif
                 <div class="hero-overlay"></div>
                 <h1 class="hero-title">{{ \App\Models\SiteSetting::get('home_hero_title', 'Selamat Datang di SMKN 4 BOGOR') }}</h1>
@@ -1276,6 +1276,21 @@
                 if (profileDropdown) profileDropdown.classList.remove('show');
                 if (loginMenu) loginMenu.classList.remove('show');
             });
+
+            // Load hero image dengan error handling
+            const heroBackground = document.querySelector('.hero-background[data-hero-image]');
+            if (heroBackground) {
+                const imageUrl = heroBackground.getAttribute('data-hero-image');
+                const img = new Image();
+                img.onload = function() {
+                    heroBackground.style.backgroundImage = 'url(' + imageUrl + ')';
+                };
+                img.onerror = function() {
+                    // Jika image gagal load, tetap gunakan gradient dari CSS
+                    console.log('Hero image tidak ditemukan, menggunakan gradient default');
+                };
+                img.src = imageUrl;
+            }
         });
     </script>
 </body>
