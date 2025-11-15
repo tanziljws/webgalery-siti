@@ -977,7 +977,8 @@
 
             <!-- Gallery Grid -->
             <div class="gallery-grid" id="galleryGrid">
-                @foreach($galeri as $item)
+                @if($galeri->count() > 0)
+                    @foreach($galeri as $item)
                 <div class="gallery-item" 
                      data-category="{{ $item->post->kategori->judul ?? 'Umum' }}" 
                      data-gallery-id="{{ $item->id }}"
@@ -1040,7 +1041,14 @@
                         @endforeach
                     </div>
                 </div>
-                @endforeach
+                    @endforeach
+                @else
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #6b7280;">
+                        <i class="fas fa-images" style="font-size: 64px; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <h3 style="font-size: 24px; margin-bottom: 10px; color: #374151;">Belum Ada Galeri Foto</h3>
+                        <p style="font-size: 16px;">Galeri foto akan muncul di sini setelah admin menambahkan foto.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </main>
