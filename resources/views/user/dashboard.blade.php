@@ -348,13 +348,18 @@
         .hero-section {
             text-align: center;
             margin-bottom: 60px;
-            padding: 40px 20px;
+            padding: 80px 20px;
             background: transparent;
             border-radius: 20px;
             color: white;
             box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
             position: relative;
             overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         /* Added background image container */
@@ -364,10 +369,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+            z-index: -2;
             /* Default gradient fallback jika inline style tidak override */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -803,6 +808,11 @@
                 padding: 0 20px;
             }
             
+            .hero-section {
+                min-height: 400px;
+                padding: 60px 20px;
+            }
+            
             .hero-title {
                 font-size: 2rem;
             }
@@ -818,7 +828,7 @@
                 margin-left: -40px;
                 margin-right: -40px;
                 border-radius: 0;
-                min-height: 100vh;
+                min-height: 600px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -1092,19 +1102,82 @@
             <!-- Hero Section -->
             <section class="hero-section">
                 @php
-                    $heroImage = \App\Models\SiteSetting::get('home_hero_image', '');
+                    // Cek apakah tabel site_settings ada dan ambil hero image
+                    $heroImage = '';
+                    try {
+                        if (\Illuminate\Support\Facades\Schema::hasTable('site_settings')) {
+                            $heroImage = \App\Models\SiteSetting::get('home_hero_image', '');
+                        }
+                    } catch (\Exception $e) {
+                        \Log::warning('SiteSetting error: ' . $e->getMessage());
+                    }
+                    
+                    // Fallback image path
+                    $fallbackImage = asset('images/DJI_0148.JPG');
                 @endphp
-                @if($heroImage)
-                    <div class="hero-background" style="background-image: url('{{ asset('storage/' . $heroImage) }}');"></div>
+                
+                @if($heroImage && !empty($heroImage))
+                    {{-- Jika ada hero image dari database, cek apakah file ada di storage atau images --}}
+                    @php
+                        $storagePath = storage_path('app/public/' . $heroImage);
+                        $publicPath = public_path('images/' . $heroImage);
+                        $imageUrl = '';
+                        
+                        if (file_exists($storagePath)) {
+                            $imageUrl = asset('storage/' . $heroImage);
+                        } elseif (file_exists($publicPath)) {
+                            $imageUrl = asset('images/' . $heroImage);
+                        } elseif (strpos($heroImage, 'http') === 0) {
+                            $imageUrl = $heroImage; // Full URL
+                        } else {
+                            $imageUrl = $fallbackImage; // Fallback
+                        }
+                    @endphp
+                    <div class="hero-background" style="background-image: url('{{ $imageUrl }}');" data-hero-image="{{ $imageUrl }}"></div>
                 @else
                     {{-- Fallback: coba load image, jika gagal akan fallback ke gradient di CSS --}}
-                    <div class="hero-background" data-hero-image="{{ asset('images/DJI_0148.JPG') }}"></div>
+                    <div class="hero-background" data-hero-image="{{ $fallbackImage }}"></div>
                 @endif
                 <div class="hero-overlay"></div>
-                <h1 class="hero-title">{{ \App\Models\SiteSetting::get('home_hero_title', 'Selamat Datang di SMKN 4 BOGOR') }}</h1>
-                <p class="hero-subtitle">{{ \App\Models\SiteSetting::get('home_hero_subtitle', 'Mengembangkan potensi siswa melalui pendidikan berkualitas dan fasilitas modern') }}</p>
+                <h1 class="hero-title">
+                    @php
+                        try {
+                            if (\Illuminate\Support\Facades\Schema::hasTable('site_settings')) {
+                                echo \App\Models\SiteSetting::get('home_hero_title', 'Selamat Datang di SMKN 4 BOGOR');
+                            } else {
+                                echo 'Selamat Datang di SMKN 4 BOGOR';
+                            }
+                        } catch (\Exception $e) {
+                            echo 'Selamat Datang di SMKN 4 BOGOR';
+                        }
+                    @endphp
+                </h1>
+                <p class="hero-subtitle">
+                    @php
+                        try {
+                            if (\Illuminate\Support\Facades\Schema::hasTable('site_settings')) {
+                                echo \App\Models\SiteSetting::get('home_hero_subtitle', 'Mengembangkan potensi siswa melalui pendidikan berkualitas dan fasilitas modern');
+                            } else {
+                                echo 'Mengembangkan potensi siswa melalui pendidikan berkualitas dan fasilitas modern';
+                            }
+                        } catch (\Exception $e) {
+                            echo 'Mengembangkan potensi siswa melalui pendidikan berkualitas dan fasilitas modern';
+                        }
+                    @endphp
+                </p>
                 <a href="#principal-welcome" class="hero-btn">
-                    <i class="fas fa-images"></i> {{ \App\Models\SiteSetting::get('home_hero_button_text', 'Lihat Selengkapnya') }}
+                    <i class="fas fa-images"></i> 
+                    @php
+                        try {
+                            if (\Illuminate\Support\Facades\Schema::hasTable('site_settings')) {
+                                echo \App\Models\SiteSetting::get('home_hero_button_text', 'Lihat Selengkapnya');
+                            } else {
+                                echo 'Lihat Selengkapnya';
+                            }
+                        } catch (\Exception $e) {
+                            echo 'Lihat Selengkapnya';
+                        }
+                    @endphp
                 </a>
             </section>
 
@@ -1284,13 +1357,26 @@
                 const img = new Image();
                 img.onload = function() {
                     heroBackground.style.backgroundImage = 'url(' + imageUrl + ')';
+                    heroBackground.style.backgroundSize = 'cover';
+                    heroBackground.style.backgroundPosition = 'center center';
+                    heroBackground.style.backgroundRepeat = 'no-repeat';
                 };
                 img.onerror = function() {
                     // Jika image gagal load, tetap gunakan gradient dari CSS
                     console.log('Hero image tidak ditemukan, menggunakan gradient default');
+                    heroBackground.style.backgroundImage = '';
                 };
                 img.src = imageUrl;
             }
+            
+            // Pastikan semua hero background memiliki style yang benar
+            document.querySelectorAll('.hero-background').forEach(function(bg) {
+                if (bg.style.backgroundImage && bg.style.backgroundImage !== 'none') {
+                    bg.style.backgroundSize = 'cover';
+                    bg.style.backgroundPosition = 'center center';
+                    bg.style.backgroundRepeat = 'no-repeat';
+                }
+            });
         });
     </script>
 </body>
