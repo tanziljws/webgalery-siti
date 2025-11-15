@@ -172,11 +172,21 @@ Route::get('/', function () {
         // Get latest 4 agendas - dengan error handling
         $latestAgendas = collect([]);
         try {
+            // Cek apakah tabel agenda ada
             if (Schema::hasTable('agenda')) {
-                $latestAgendas = \App\Models\Agenda::where('status', 'aktif')
-                    ->orderBy('order')
-                    ->limit(4)
-                    ->get();
+                try {
+                    $latestAgendas = \App\Models\Agenda::where('status', 'aktif')
+                        ->orderBy('order')
+                        ->limit(4)
+                        ->get();
+                } catch (\Exception $e) {
+                    \Log::warning('Error querying agendas (table exists but query failed): ' . $e->getMessage());
+                    $latestAgendas = collect([]);
+                }
+            } else {
+                // Tabel tidak ada, skip saja (mungkin migration belum jalan)
+                \Log::info('Table agenda does not exist, skipping agenda query');
+                $latestAgendas = collect([]);
             }
         } catch (\Exception $e) {
             \Log::error('Error loading agendas: ' . $e->getMessage(), [
