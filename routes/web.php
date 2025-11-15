@@ -686,55 +686,36 @@ Route::get('/user/gallery', function () {
         
         // Query galleries dengan error handling
         try {
-            $hasGalery = false;
-            $hasPosts = false;
-            try {
-                $hasGalery = Schema::hasTable('galery');
-                $hasPosts = Schema::hasTable('posts');
-            } catch (\Exception $schemaError) {
-                \Log::warning('Schema check error in gallery: ' . $schemaError->getMessage());
-            }
-            
-            if ($hasGalery && $hasPosts) {
-                try {
-                    $galeri = \App\Models\galery::with(['post.kategori', 'fotos'])
-                        ->where('status', 'aktif')
-                        ->get()
-                        ->filter(function($gallery) {
-                            return $gallery->post !== null && 
-                                   $gallery->fotos && 
-                                   $gallery->fotos->count() > 0;
-                        })
-                        ->sortByDesc(function($gallery) {
-                            return $gallery->post->created_at ?? now();
-                        })
-                        ->values();
-                } catch (\Exception $queryError) {
-                    \Log::error('Error querying galleries: ' . $queryError->getMessage());
-                    $galeri = collect([]);
-                }
-            }
+            // Langsung query tanpa cek schema dulu (lebih cepat)
+            $galeri = \App\Models\galery::with(['post.kategori', 'fotos'])
+                ->where('status', 'aktif')
+                ->get()
+                ->filter(function($gallery) {
+                    return $gallery->post !== null && 
+                           $gallery->fotos && 
+                           $gallery->fotos->count() > 0;
+                })
+                ->sortByDesc(function($gallery) {
+                    return $gallery->post->created_at ?? now();
+                })
+                ->values();
+                
+            \Log::info('Gallery query result: ' . $galeri->count() . ' items');
         } catch (\Exception $e) {
-            \Log::error('Error loading galleries: ' . $e->getMessage());
+            \Log::error('Error querying galleries: ' . $e->getMessage());
             $galeri = collect([]);
         }
         
-        // Query kategori dengan error handling
+        // Query kategori
         try {
-            $hasKategori = false;
-            try {
-                $hasKategori = Schema::hasTable('kategori');
-            } catch (\Exception $schemaError) {
-                \Log::warning('Schema check error for kategori: ' . $schemaError->getMessage());
-            }
-            
-            if ($hasKategori) {
-    $kategoris = \App\Models\Kategori::orderBy('judul', 'asc')->get();
-            }
+            $kategoris = \App\Models\Kategori::orderBy('judul', 'asc')->get();
         } catch (\Exception $e) {
             \Log::error('Error loading kategori: ' . $e->getMessage());
             $kategoris = collect([]);
         }
+        
+        // Log untuk debug
+        \Log::info('Gallery page - Galeri count: ' . $galeri->count() . ', Kategori count: ' . $kategoris->count());
         
         return view('user.gallery', compact('galeri', 'kategoris'));
     } catch (\Throwable $e) {
@@ -746,7 +727,7 @@ Route::get('/user/gallery', function () {
         // Jangan tampilkan error view, langsung render dengan empty data
         $galeri = collect([]);
         $kategoris = collect([]);
-    return view('user.gallery', compact('galeri', 'kategoris'));
+        return view('user.gallery', compact('galeri', 'kategoris'));
     }
 })->name('user.gallery');
 
