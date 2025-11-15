@@ -20,13 +20,16 @@ class ImportSqlData extends Command
             return 1;
         }
 
-        // Check database connection
-        $connection = config('database.default');
+        // Check database connection - force reload from env
+        $connection = env('DB_CONNECTION', config('database.default'));
         $this->info("Using database connection: {$connection}");
+        $this->info("DB_CONNECTION from env: " . env('DB_CONNECTION', 'not set'));
+        $this->info("DB_HOST from env: " . env('DB_HOST', 'not set'));
         
-        if ($connection === 'sqlite') {
-            $this->error("Error: Database masih menggunakan SQLite!");
+        if ($connection === 'sqlite' || empty($connection)) {
+            $this->error("Error: Database masih menggunakan SQLite atau tidak terdeteksi!");
             $this->warn("Pastikan DB_CONNECTION=mysql di Railway environment variables");
+            $this->warn("Coba clear config cache: railway run php artisan config:clear");
             return 1;
         }
 
