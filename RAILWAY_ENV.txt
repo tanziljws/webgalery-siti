@@ -1,0 +1,35 @@
+# Copy-paste ini ke Railway Dashboard → Variables
+
+# Database Configuration - Railway
+DB_CONNECTION=mysql
+DB_HOST=yamanote.proxy.rlwy.net
+DB_PORT=54511
+DB_DATABASE=railway
+DB_USERNAME=root
+DB_PASSWORD=DmAxrbVXaioQUfuttWoIIRCjlkMPzqJD
+
+# Session & Cache (gunakan file untuk menghindari error)
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+
+CACHE_STORE=file
+CACHE_PREFIX=galeri_cache
+
+# App Configuration
+APP_NAME="Galeri SMKN 4 Bogor"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://your-app-name.up.railway.app
+
+# Logging
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
+
+# Other
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+

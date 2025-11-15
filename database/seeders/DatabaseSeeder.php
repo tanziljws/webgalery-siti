@@ -43,5 +43,9 @@ class DatabaseSeeder extends Seeder
             PetugasSeeder::class,
             SiteSettingSeeder::class,
         ]);
+
+        // Import data dari database lokal (jika ada)
+        // Uncomment baris berikut untuk import semua data dari DatabaseDataSeeder
+        // $this->call(DatabaseDataSeeder::class);
     }
 }

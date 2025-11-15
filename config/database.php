@@ -60,10 +60,11 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
                 PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-                PDO::ATTR_TIMEOUT => 10,
+                PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 60),
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=600, interactive_timeout=600",
             ]) : [],
-            'timeout' => env('DB_TIMEOUT', 10),
+            'timeout' => env('DB_TIMEOUT', 60),
         ],
 
         'mariadb' => [
