@@ -400,7 +400,15 @@ Route::get('/', function () {
                 'message' => config('app.debug') ? $e->getMessage() : 'Database connection error. Please check your configuration.'
             ], 500);
         } catch (\Exception $viewError) {
-            return response('Error: ' . $e->getMessage() . ' (View also failed: ' . $viewError->getMessage() . ')', 500);
+            // Jika error view juga gagal, return JSON dengan detail error
+            return response()->json([
+                'error' => 'Internal Server Error',
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'type' => get_class($e),
+                'view_error' => $viewError->getMessage(),
+            ], 500);
         }
     }
 })->name('user.dashboard');
