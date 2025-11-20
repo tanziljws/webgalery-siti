@@ -828,7 +828,9 @@ Route::post('/foto/{id}/toggle-dislike', [FotoController::class, 'toggleDislike'
 // -------------------------------
 // AUTH ROUTES (Login/Logout)
 // -------------------------------
-Route::middleware(['guest'])->group(function () {
+// Login routes: hanya redirect jika sudah login sebagai petugas
+// User biasa (web guard) tetap bisa akses login untuk login sebagai admin
+Route::middleware(['guest:petugas'])->group(function () {
     // Halaman pilihan login (admin/user/register)
     Route::get('/auth/choose', function () {
         return view('auth.choose-login');
@@ -838,7 +840,7 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
-    // Register user baru
+    // Register user baru - user biasa bisa register meski sudah login
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 });
